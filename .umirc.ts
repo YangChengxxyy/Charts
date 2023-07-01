@@ -1,8 +1,6 @@
 import { defineConfig } from '@umijs/max';
 
 export default defineConfig({
-  publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
-  base: './',
   antd: {},
   access: {},
   model: {},
