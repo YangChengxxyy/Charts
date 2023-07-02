@@ -9,5 +9,7 @@
 /.umi-production
 /.umi-test
 /.mfsu
+.vscode
+.husky
 .swc
 .DS_Store
