@@ -1,7 +1,14 @@
 import { defineConfig } from '@umijs/max';
 
 export default defineConfig({
-  publicPath: process.env.NODE_ENV === 'production' ? 'https://yangchengxxyy.github.io/SandkeyCharts/' : '/',
+  publicPath:
+    process.env.NODE_ENV === 'production'
+      ? 'https://yangchengxxyy.github.io/SandkeyCharts/'
+      : '/',
+  history: {
+    type: 'hash',
+  },
+  hash: true,
   antd: {},
   access: {},
   model: {},
