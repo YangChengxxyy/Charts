@@ -1,7 +1,7 @@
 import { defineConfig } from '@umijs/max';
 
 export default defineConfig({
-  base: process.env.NODE_ENV === 'production' ? '/SandkeyCharts/' : '/',
+  publicPath: process.env.NODE_ENV === 'production' ? 'https://yangchengxxyy.github.io/SandkeyCharts/' : '/',
   antd: {},
   access: {},
   model: {},
