@@ -27,8 +27,6 @@ const MySankey = React.forwardRef<any, IProps>((props, ref) => {
       sourceField="source"
       targetField="target"
       weightField="value"
-      nodeWidthRatio={0.0008}
-      nodePaddingRatio={0.03}
       nodeSort={nodeSort}
     />
   );

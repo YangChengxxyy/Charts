@@ -16,39 +16,13 @@ import { App, AutoComplete, Button, Space, Upload, message } from 'antd';
 import { useRef, useState } from 'react';
 import { WorkBook, read as readXlsx, utils } from 'xlsx';
 
-import { isNil } from 'lodash';
+import { groupBy, isNil } from 'lodash';
 
 type FormProps = {
   sheetName: string;
   nodeSort: 'N' | 'SB' | 'BS';
   haveHeader: 'Y' | 'N';
   position: string;
-};
-
-const sbSort: (a: Record<string, any>, b: Record<string, any>) => number = (
-  a,
-  b,
-) => {
-  if (!isNil(b?.value) && !isNil(a?.value)) {
-    return a.value - b.value;
-  }
-  return 0;
-};
-
-const bsSort: (a: Record<string, any>, b: Record<string, any>) => number = (
-  a,
-  b,
-) => {
-  if (!isNil(b?.value) && !isNil(a?.value)) {
-    return b.value - a.value;
-  }
-  return 0;
-};
-
-const sortMap = {
-  N: undefined,
-  BS: bsSort,
-  SB: sbSort,
 };
 
 const Charts = () => {
@@ -59,9 +33,6 @@ const Charts = () => {
   >([]);
 
   const [formData, setFormData] = useState<FormProps>();
-
-  const [nodeSort, setNodeSort] =
-    useState<(a: Record<string, any>, b: Record<string, any>) => number>();
 
   const sankeyRef = useRef<any>(null);
 
@@ -106,6 +77,7 @@ const Charts = () => {
           source: string;
           target: string;
           value: number;
+          flag: number;
         }[]
       >((pre, curr) => {
         const size = curr.length;
@@ -121,22 +93,66 @@ const Charts = () => {
             const v = temp[1];
             finder.value += typeof v === 'number' ? v : parseFloat(v);
           } else {
-            if (isNil(temp[0]) || isNil(temp[1])) return pre;
+            if (isNil(temp[0]) || isNil(temp[1])) {
+              console.log('isNil', temp);
+              return pre;
+            }
             pre.push({
               source: `${temp[0]}`,
               value:
                 typeof temp[1] === 'number' ? temp[1] : parseFloat(temp[1]),
               target: `${temp[2]}`,
+              flag: i / 2,
             });
           }
         }
         return pre;
       }, []);
-      console.log('🚀 ~ file: index.tsx:66 ~ Charts ~ res:', res);
 
-      setData(res);
+      const temp = groupBy(res, 'flag');
+
+      const d = [];
+
+      const sortMap = {
+        SB: (
+          a: {
+            source: string;
+            target: string;
+            value: number;
+            flag: number;
+          },
+          b: {
+            source: string;
+            target: string;
+            value: number;
+            flag: number;
+          },
+        ) => a.value - b.value,
+        BS: (
+          a: {
+            source: string;
+            target: string;
+            value: number;
+            flag: number;
+          },
+          b: {
+            source: string;
+            target: string;
+            value: number;
+            flag: number;
+          },
+        ) => b.value - a.value,
+        N: () => 0,
+      };
+
+      for (let k in temp) {
+        if (temp.hasOwnProperty(k)) {
+          d.push(...temp[k].sort(sortMap[data.nodeSort]));
+        }
+      }
+
+      setData(d);
       setFormData(data);
-      setNodeSort(sortMap[data.nodeSort]);
     }
   };
   return (
@@ -241,7 +257,7 @@ const Charts = () => {
             }
           >
             <div>
-              <Sankey ref={sankeyRef} data={data} nodeSort={nodeSort} />
+              <Sankey ref={sankeyRef} data={data} />
             </div>
           </ProCard>
         )}
