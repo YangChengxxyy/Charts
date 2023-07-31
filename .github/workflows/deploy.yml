@@ -1,3 +1,5 @@
+name: Build Page
+
 on:
   push:
     branches:
