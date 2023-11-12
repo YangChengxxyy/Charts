@@ -15,7 +15,7 @@ export default defineConfig({
   initialState: {},
   request: {},
   layout: {
-    title: 'sankey绘制',
+    title: '绘制',
   },
   routes: [
     {
@@ -28,8 +28,8 @@ export default defineConfig({
       component: './Home',
     },
     {
-      name: '绘制',
-      path: '/charts',
+      name: '桑吉图绘制',
+      path: '/sankey',
       component: './Charts',
     },
   ],
