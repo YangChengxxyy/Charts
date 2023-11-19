@@ -3,7 +3,7 @@ import { defineConfig } from '@umijs/max';
 export default defineConfig({
   publicPath:
     process.env.NODE_ENV === 'production'
-      ? 'https://yangchengxxyy.github.io/SankeyCharts/'
+      ? 'https://yangchengxxyy.github.io/Charts/'
       : '/',
   history: {
     type: 'hash',
@@ -30,7 +30,7 @@ export default defineConfig({
     {
       name: '桑吉图绘制',
       path: '/sankey',
-      component: './Charts',
+      component: './SankeyCharts',
     },
   ],
   npmClient: 'pnpm',
