@@ -1,1 +1,1 @@
-export const DEFAULT_NAME = 'sankey绘制';
+export const DEFAULT_NAME = '绘制';
