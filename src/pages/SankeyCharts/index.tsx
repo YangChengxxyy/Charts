@@ -42,8 +42,6 @@ const Charts = () => {
     const { haveHeader: nH, position } = data;
     const haveHeader = nH === 'Y';
 
-    console.log('🚀 ~ file: index.tsx:28 ~ Charts ~ haveHeader:', haveHeader);
-
     if (book) {
       const sheet = book.Sheets[data.sheetName];
       if (!sheet) {
@@ -53,6 +51,7 @@ const Charts = () => {
 
       const refString = position.trim() || sheet['!ref']!;
       const ref = utils.decode_range(refString);
+      console.log("🚀 ~ Charts ~ ref:", ref)
       const { s: start, e: end } = ref;
 
       const columns: (string | number)[][] = new Array(end.c - start.c + 1)
@@ -62,16 +61,19 @@ const Charts = () => {
       const rows: (string | number)[][] = new Array(end.r - start.r + 1)
         .fill(0)
         .map(() => []);
-      console.log('🚀 ~ file: index.tsx:53 ~ Charts ~ rows:', rows);
 
       for (let r = haveHeader ? start.r + 1 : start.r; r <= end.r; r++) {
         for (let c = start.c; c <= end.c; c++) {
           const position = utils.encode_cell({ c, r });
+          if (!columns[c]) {
+            columns[c] = [];
+          }
           columns[c][haveHeader ? r - 1 : r] = sheet[position]?.v;
 
           rows[haveHeader ? r - 1 : r][c] = sheet[position]?.v;
         }
       }
+
       const res = rows.reduce<
         {
           source: string;
@@ -94,7 +96,6 @@ const Charts = () => {
             finder.value += typeof v === 'number' ? v : parseFloat(v);
           } else {
             if (isNil(temp[0]) || isNil(temp[1])) {
-              console.log('isNil', temp);
               return pre;
             }
             pre.push({
@@ -108,6 +109,7 @@ const Charts = () => {
         }
         return pre;
       }, []);
+      console.log('🚀 ~ Charts ~ res:', res);
 
       const temp = groupBy(res, 'flag');
 
